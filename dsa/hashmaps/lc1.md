@@ -1,6 +1,6 @@
 # [Problem Name]
 
-**Source:** LeetCode
+**Source:** https://leetcode.com/problems/two-sum/description/
 **Difficulty:** Easy
 **Topic:** hashmaps
 **Date solved:** 2026-06-21
