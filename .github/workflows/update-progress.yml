@@ -1,0 +1,53 @@
+name: Update Progress Stats
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sql/**'
+      - 'dsa/**'
+      - 'system-design/**'
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Count solved problems
+        id: counts
+        run: |
+          SQL_COUNT=$(find sql -name "*.md" ! -name "_TEMPLATE.md" | wc -l)
+          DSA_COUNT=$(find dsa -name "*.md" ! -name "_TEMPLATE.md" | wc -l)
+          DESIGN_COUNT=$(find system-design -name "*.md" ! -name "_TEMPLATE.md" | wc -l)
+          echo "sql=$SQL_COUNT" >> "$GITHUB_OUTPUT"
+          echo "dsa=$DSA_COUNT" >> "$GITHUB_OUTPUT"
+          echo "design=$DESIGN_COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Update README table
+        run: |
+          python3 - <<'EOF'
+          import re
+
+          sql = "${{ steps.counts.outputs.sql }}"
+          dsa = "${{ steps.counts.outputs.dsa }}"
+          design = "${{ steps.counts.outputs.design }}"
+
+          with open("README.md", "r") as f:
+              content = f.read()
+
+          content = re.sub(r"(SQL problems solved \| \*\*)\d+(\*\*)", rf"\g<1>{sql}\g<2>", content)
+          content = re.sub(r"(DSA problems solved \| \*\*)\d+(\*\*)", rf"\g<1>{dsa}\g<2>", content)
+          content = re.sub(r"(System design docs written \| \*\*)\d+(\*\*)", rf"\g<1>{design}\g<2>", content)
+
+          with open("README.md", "w") as f:
+              f.write(content)
+          EOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "progress-bot"
+          git config user.email "actions@github.com"
+          git diff --quiet README.md || (git add README.md && git commit -m "chore: auto-update progress stats" && git push)
