@@ -24,8 +24,8 @@ My single source of truth while becoming a data engineer: theory notes, daily SQ
 
 | Metric | Count |
 |---|---|
-| SQL problems solved | **4** |
-| DSA problems solved | **1** |
+| SQL problems solved | **7** |
+| DSA problems solved | **2** |
 | Days of daily practice streak | **0** |
 | System design docs written | **0** |
 | Phase | Phase 0 — Foundations Audit |
