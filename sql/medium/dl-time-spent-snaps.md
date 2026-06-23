@@ -1,7 +1,8 @@
 # [Problem Name]
 
-**Source:** StrataScratch / DataLemur / LeetCode (link)
-**Pattern(s):**
+**Source:** [text](https://datalemur.com/questions/time-spent-snaps)
+**Difficulty:** Easy / Medium / Hard
+**Pattern(s):** e.g. window functions, recursive CTE, gaps-and-islands
 **Date solved:** YYYY-MM-DD
 **Time taken:** \_ min (be honest — this is what you're tracking against interview timing)
 
@@ -12,7 +13,13 @@
 ## My Solution
 
 ```sql
--- your query
+SELECT
+  age_bucket,
+  ROUND((SUM(time_spent) FILTER(WHERE activity_type ='send')*100.0)/SUM(time_spent) FILTER(WHERE activity_type !='chat'), 2) AS send_perc,
+  ROUND((SUM(time_spent) FILTER(WHERE activity_type ='open')*100.0)/SUM(time_spent) FILTER(WHERE activity_type !='chat'), 2) AS open_perc
+FROM activities act
+INNER JOIN age_breakdown ab ON ab.user_id = act.user_id
+GROUP BY ab.age_bucket
 ```
 
 ## Why this approach

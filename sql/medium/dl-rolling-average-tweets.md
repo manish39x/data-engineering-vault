@@ -1,6 +1,6 @@
 # [Problem Name]
 
-**Source:** StrataScratch / DataLemur / LeetCode (link)
+**Source:** [text](https://datalemur.com/questions/rolling-average-tweets)
 **Pattern(s):**
 **Date solved:** YYYY-MM-DD
 **Time taken:** \_ min (be honest — this is what you're tracking against interview timing)
@@ -12,7 +12,14 @@
 ## My Solution
 
 ```sql
--- your query
+SELECT
+  user_id,
+  tweet_date,
+  ROUND(AVG(tweet_count) OVER(PARTITION BY user_id
+                              ORDER BY tweet_date
+                              ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+                              ), 2) AS rolling_avg_3d
+FROM tweets
 ```
 
 ## Why this approach
